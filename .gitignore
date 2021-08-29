@@ -2,7 +2,7 @@
 /flaskr/tutorialescanciones
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+*/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -109,12 +109,13 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
-env/
-venv/
+*/.venv
+*/env/
+*/venv/
 ENV/
 env.bak/
 venv.bak/
+*/node_modules
 
 # Spyder project settings
 .spyderproject
@@ -141,7 +142,8 @@ dmypy.json
 cython_debug/
 
 #VSC Settings
-.vscode
+*/.vscode
+*/.idea
 
 #DataBase
 test.db
