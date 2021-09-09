@@ -16,6 +16,7 @@ class Cancion(db.Model):
     minutos = db.Column(db.Integer)
     segundos = db.Column(db.Integer)
     interprete = db.Column(db.String(128))
+    favorita = db.Column(db.Integer)
     albumes = db.relationship('Album', secondary = 'album_cancion', back_populates="canciones")
 
 class Medio(enum.Enum):
@@ -60,5 +61,11 @@ class AlbumSchema(SQLAlchemyAutoSchema):
 class UsuarioSchema(SQLAlchemyAutoSchema):
     class Meta:
          model = Usuario
+         include_relationships = True
+         load_instance = True
+
+class CancionFavoritaSchema(SQLAlchemyAutoSchema):
+    class Meta:
+         model = Album
          include_relationships = True
          load_instance = True
