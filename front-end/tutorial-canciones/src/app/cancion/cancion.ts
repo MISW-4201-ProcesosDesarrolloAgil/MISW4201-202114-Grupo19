@@ -20,8 +20,8 @@ export class Cancion {
         this.titulo = titulo,
         this.minutos = minutos,
         this.segundos = segundos,
-        this.interprete = interprete
-        this.favorita = favorita
+        this.interprete = interprete,
+        this.favorita = favorita,
         this.albumes = albumes
     }
 }
