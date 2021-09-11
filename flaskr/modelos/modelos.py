@@ -16,6 +16,7 @@ class Cancion(db.Model):
     minutos = db.Column(db.Integer)
     segundos = db.Column(db.Integer)
     interprete = db.Column(db.String(128))
+    genero = db.Column(db.String(128))
     albumes = db.relationship('Album', secondary = 'album_cancion', back_populates="canciones")
 
 class Medio(enum.Enum):

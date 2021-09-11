@@ -9,10 +9,16 @@ usuario_schema = UsuarioSchema()
 album_schema = AlbumSchema()
 
 
+class VistaGeneros(Resource):
+
+    def get(self):
+        generos = Cancion.query(Cancion.genero).distinct()
+        return [cancion_schema.dump(ge) for ge in generos]
+
 class VistaCanciones(Resource):
 
     def post(self):
-        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
+        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"], genero=request.json["genero"])
         db.session.add(nueva_cancion)
         db.session.commit()
         return cancion_schema.dump(nueva_cancion)
@@ -31,6 +37,7 @@ class VistaCancion(Resource):
         cancion.minutos = request.json.get("minutos",cancion.minutos)
         cancion.segundos = request.json.get("segundos",cancion.segundos)
         cancion.interprete = request.json.get("interprete",cancion.interprete)
+        cancion.genero = request.json.get("genero", cancion.genero)
         db.session.commit()
         return cancion_schema.dump(cancion)
 
@@ -103,16 +110,16 @@ class VistaCancionesAlbum(Resource):
 
     def post(self, id_album):
         album = Album.query.get_or_404(id_album)
-        
+
         if "id_cancion" in request.json.keys():
-            
+
             nueva_cancion = Cancion.query.get(request.json["id_cancion"])
             if nueva_cancion is not None:
                 album.canciones.append(nueva_cancion)
                 db.session.commit()
             else:
                 return 'Canción errónea',404
-        else: 
+        else:
             nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
             album.canciones.append(nueva_cancion)
         db.session.commit()
