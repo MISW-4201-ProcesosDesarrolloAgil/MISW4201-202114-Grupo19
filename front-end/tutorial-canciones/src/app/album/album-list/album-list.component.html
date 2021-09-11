@@ -1,5 +1,7 @@
 <app-header></app-header>
+
 <div class="container my-4">
+
   <div class="row">
     <div class="col-4">
       <div class="card">
@@ -13,7 +15,40 @@
             </div>
           </div>
         </div>
+        <div class="card">
+
+          <div class="card-body">
+            <div class="filters ">
+              <h1 class="mb-4" ></h1>
+              <h2 >Filtrar por:</h2>
+               <div>
+                <label for="label-filter" class="d-block mt-3 mb-1" >Titulo</label>
+                <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="labelFilter">
+                  <option selected></option>
+                  <option *ngFor="let l of filteredAlbums" >{{l.titulo}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="albums-list col-md">
+
+              <div class="row no-albums" *ngIf="!filteredAlbums.length">
+                <div class="col-10 mx-auto d-block mt-5">
+                  <div class="card text-center" style="height: 30rem;">
+                    <h5 class="card-header" >0 results</h5>
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                      <h5 class="card-title" >There are no albums</h5>
+                      <p class="card-text" >Click the Add Album button to contribute to the catalog.</p>
+                      <button class="btn btn-standard btn-sm" type="button" (click)="irCrearAlbum()" >+ Add album</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
         <div class="card-body">
+
 
           <div class="input-group my-2">
             <input #busqueda type="search" class="form-control" placeholder="Buscar álbumes" aria-label="Search" (keyup)="buscarAlbum(busqueda.value)">
@@ -21,15 +56,17 @@
 
           <table class="table table-hover mb-0" aria-describedby="colecName">
             <tbody>
-                <tr *ngFor="let album of mostrarAlbumes; index as i" (click)="onSelect(album, i)" [ngClass]="{'selected': i === indiceSeleccionado}">
+                <tr *ngFor="let album of filteredAlbums; index as i" (click)="onSelect(album, i)" [ngClass]="{'selected': i === indiceSeleccionado}">
                   <td >{{album.titulo}}</td>
                   <td >{{album.anio}}</td>
                 </tr>
             </tbody>
           </table>
-          
+
         </div>
       </div>
+
+
     </div>
     <div class="col-8">
       <app-album-detail (deleteAlbum)="eliminarAlbum()" [album]="albumSeleccionado"></app-album-detail>

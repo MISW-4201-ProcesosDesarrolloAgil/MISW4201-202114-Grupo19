@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlbumListComponent } from './album-list/album-list.component';
 import { AlbumDetailComponent } from './album-detail/album-detail.component';
 import { AlbumCreateComponent } from './album-create/album-create.component';
@@ -12,7 +12,7 @@ import { AlbumJoinCancionComponent } from './album-join-cancion/album-join-canci
 @NgModule({
   declarations: [AlbumListComponent, AlbumDetailComponent, AlbumCreateComponent, AlbumEditComponent, AlbumJoinCancionComponent],
   imports: [
-    CommonModule, ReactiveFormsModule, AppHeaderModule
+    CommonModule, ReactiveFormsModule, AppHeaderModule, FormsModule, ReactiveFormsModule
   ],
   exports:[AlbumListComponent, AlbumDetailComponent, AlbumCreateComponent, AlbumEditComponent, AlbumJoinCancionComponent]
 })
