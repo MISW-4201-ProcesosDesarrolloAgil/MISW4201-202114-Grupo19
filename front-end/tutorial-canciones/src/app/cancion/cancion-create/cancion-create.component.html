@@ -90,6 +90,27 @@
             </div>
           </div>
 
+          <div class="form-group my-2">
+            <div class="row">
+              <div class="col-2 text-start">
+                <label for="titulo">Genero </label>
+              </div>
+              <div class="col-10">
+                <input type="text" class="form-control" formControlName="genero" placeholder="genero de la canción">
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-8">
+                <div class="alert alert-danger my-3" *ngIf="cancionForm.get('genero')?.hasError('required') && cancionForm.get('genero')?.touched">
+                  Debe ingresar un genero para la canción
+                </div>
+                <div class="alert alert-danger my-3" *ngIf="cancionForm.get('genero')?.hasError('maxlength')">
+                  El genero no debe exceder los 128 carácteres
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row mt-4">
             <div class="col-6 text-end">
               <button class="btn btn-danger" (click)="cancelCreate()">Cancelar</button>

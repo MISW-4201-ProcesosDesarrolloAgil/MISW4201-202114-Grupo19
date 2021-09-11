@@ -35,7 +35,8 @@ export class CancionCreateComponent implements OnInit {
         titulo: ["", [Validators.required, Validators.maxLength(128)]],
         minutos: ["", [Validators.required, Validators.pattern("^[0-9]*$"), Validators.maxLength(2)]],
         segundos: ["", [Validators.required, Validators.pattern("^[0-9]*$"), Validators.maxLength(2)]],
-        interprete: ["", [Validators.required, Validators.maxLength(128)]]
+        interprete: ["", [Validators.required, Validators.maxLength(128)]],
+        genero: ["",[Validators.required, Validators.maxLength(128)]]
       })
     }
   }

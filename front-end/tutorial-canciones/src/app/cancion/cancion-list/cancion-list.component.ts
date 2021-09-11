@@ -3,6 +3,7 @@ import { Cancion } from '../cancion';
 import { CancionService } from '../cancion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-cancion-list',
@@ -25,6 +26,10 @@ export class CancionListComponent implements OnInit {
   cancionSeleccionada: Cancion
   indiceSeleccionado: number = 0
 
+  //---------
+  generos: Array<String>
+  //---------
+
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
       this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
@@ -33,6 +38,7 @@ export class CancionListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getCanciones();
+      this.getGeneros();
     }
   }
 
@@ -45,6 +51,19 @@ export class CancionListComponent implements OnInit {
     })
   }
 
+//----------------------
+// Esta funcion captura los generos que son traidis desde el BE
+  getGeneros():void{
+    this.cancionService.getGeneros()
+    .subscribe(generos => {
+      this.generos = generos
+      //this.mostrarCanciones = canciones
+      //this.onSelect(this.mostrarCanciones[0], 0)
+      console.log(generos)
+    })
+  }
+//-----------------------
+
   onSelect(cancion: Cancion, indice: number){
     this.indiceSeleccionado = indice
     this.cancionSeleccionada = cancion
@@ -55,7 +74,7 @@ export class CancionListComponent implements OnInit {
     error => {
       this.showError(`Ha ocurrido un error: ${error.message}`)
     })
-    
+
   }
 
   buscarCancion(busqueda: string){
