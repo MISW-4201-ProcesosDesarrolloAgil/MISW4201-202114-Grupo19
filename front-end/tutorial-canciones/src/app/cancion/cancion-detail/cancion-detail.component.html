@@ -5,12 +5,9 @@
       <label class="fs-4 fw-bold">Canción: {{cancion?.titulo}}</label>
       <button *ngIf="cancion" type="button" class="btn btn-outline-success ms-3 me-2" (click)="goToEdit()" title="Editar canción"><i class="bi bi-pencil-square"></i></button>
       <button *ngIf="cancion" type="button" class="btn btn-outline-danger me-1" (click)="eliminarCancion()" title="Eliminar canción"><i class="bi bi-trash-fill"></i></button>
-<<<<<<< HEAD
       <button *ngIf="cancion.favorita==1" type="button" class="btn btn-outline-dark me-1" (click)=" seleccionarFavorita()" title="Quitar de Favorita"><i class="bi bi-star-fill"></i></button>
       <button *ngIf="cancion.favorita==0" type="button" class="btn btn-outline-dark me-1" (click)=" seleccionarFavorita()" title="Añadir como Favorita"><i class="bi bi-star"></i></button>
-=======
-      <button *ngIf="cancion" type="button" class="btn btn-warning" (click)="eliminarCancion()" title="Añadir a Favoritos"><i class="bi bi-trash-fill"></i></button>
->>>>>>> 0985e95659ab45b509fcb590045cfbfeb9b483b8
+
     </div>
   </div>
 
