@@ -4,7 +4,7 @@ export class Cancion {
     minutos: number;
     segundos: number;
     interprete: string;
-    genero: string;
+    genero: Genero;
     albumes: Array<any>
 
     constructor(
@@ -13,7 +13,7 @@ export class Cancion {
         minutos: number,
         segundos: number,
         interprete: string,
-        genero: string,
+        genero: Genero,
         albumes: Array<any>
     ){
         this.id = id,
@@ -24,4 +24,17 @@ export class Cancion {
         this.genero = genero,
         this.albumes = albumes
     }
+}
+
+export class Genero{
+  llave: string;
+  valor: number
+
+  constructor(
+      llave: string,
+      valor:number
+  ){
+      this.llave = llave,
+      this.valor = valor
+  }
 }

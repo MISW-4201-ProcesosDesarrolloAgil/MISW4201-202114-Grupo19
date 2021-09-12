@@ -91,21 +91,21 @@
           </div>
 
           <div class="form-group my-2">
-            <div class="row">
+            <div class=" row">
               <div class="col-2 text-start">
-                <label for="titulo">Genero </label>
+                <label for="genero">Género</label>
               </div>
               <div class="col-10">
-                <input type="text" class="form-control" formControlName="genero" placeholder="genero de la canción">
+                <select class="form-select" formControlName="genero">
+                  <option value="" disabled>Selecciona el género de la canción</option>
+                  <option *ngFor="let genero of generos" value={{genero.llave}}>{{genero.llave}}</option>
+                </select>
               </div>
             </div>
             <div class="row justify-content-center">
               <div class="col-8">
                 <div class="alert alert-danger my-3" *ngIf="cancionForm.get('genero')?.hasError('required') && cancionForm.get('genero')?.touched">
-                  Debe ingresar un genero para la canción
-                </div>
-                <div class="alert alert-danger my-3" *ngIf="cancionForm.get('genero')?.hasError('maxlength')">
-                  El genero no debe exceder los 128 carácteres
+                  Debe seleccionar un género para la nueva canción
                 </div>
               </div>
             </div>

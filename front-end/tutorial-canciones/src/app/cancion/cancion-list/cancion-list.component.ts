@@ -26,9 +26,6 @@ export class CancionListComponent implements OnInit {
   cancionSeleccionada: Cancion
   indiceSeleccionado: number = 0
 
-  //---------
-  generos: Array<String>
-  //---------
 
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
@@ -38,7 +35,6 @@ export class CancionListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getCanciones();
-      this.getGeneros();
     }
   }
 
@@ -50,19 +46,6 @@ export class CancionListComponent implements OnInit {
       this.onSelect(this.mostrarCanciones[0], 0)
     })
   }
-
-//----------------------
-// Esta funcion captura los generos que son traidis desde el BE
-  getGeneros():void{
-    this.cancionService.getGeneros()
-    .subscribe(generos => {
-      this.generos = generos
-      //this.mostrarCanciones = canciones
-      //this.onSelect(this.mostrarCanciones[0], 0)
-      console.log(generos)
-    })
-  }
-//-----------------------
 
   onSelect(cancion: Cancion, indice: number){
     this.indiceSeleccionado = indice
