@@ -4,15 +4,14 @@ import { CancionListComponent } from './cancion-list/cancion-list.component';
 import { AppHeaderModule } from '../app-header/app-header.module';
 import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
 import { CancionCreateComponent } from './cancion-create/cancion-create.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CancionEditComponent } from './cancion-edit/cancion-edit.component';
-
 
 
 @NgModule({
   declarations: [CancionListComponent, CancionDetailComponent, CancionCreateComponent, CancionEditComponent],
   imports: [
-    CommonModule, AppHeaderModule, ReactiveFormsModule
+    CommonModule, AppHeaderModule, ReactiveFormsModule, FormsModule
   ],
   exports:[CancionListComponent, CancionDetailComponent, CancionCreateComponent, CancionEditComponent]
 })

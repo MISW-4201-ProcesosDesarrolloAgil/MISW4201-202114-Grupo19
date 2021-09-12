@@ -35,6 +35,7 @@ export class AlbumListComponent implements OnInit {
   albums: Album[];
   artists: string[];
   labels: string[];
+  genres: string[];
   filteredAlbums: Album[] = [];
   filterValues: { [filter: string]: string } = {
     artist: "",
@@ -56,12 +57,15 @@ export class AlbumListComponent implements OnInit {
   performFilters(): Album[] {
     let albums: Album[] = []
 
-    if (this.filterValues.label === "") {
+    if (this.filterValues.label === "" || this.filterValues.genre ) {
       return albums = this.albums;
     }
 
     if (this.filterValues.label !== "") {
       this.performLabelFilter().forEach(x=> albums.push(x));
+    }
+    if (this.filterValues.genre !== "") {
+      this.performGenreFilter().forEach(x=> albums.push(x));
     }
 
     return [...new Set(albums)].sort((a, b) => (a.titulo < b.titulo ? -1 : 1));
@@ -71,6 +75,11 @@ export class AlbumListComponent implements OnInit {
   performLabelFilter(): Album[] {
     return this.albums.filter((album: Album) =>
       album.titulo.includes(this.filterValues.label));
+  }
+
+  performGenreFilter(): Album[] {
+    return this.albums.filter((album: Album) =>
+      album.titulo.includes(this.filterValues.genre));
   }
 
   showForm() {
@@ -94,7 +103,7 @@ export class AlbumListComponent implements OnInit {
       this.albums = albums.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
       this.filteredAlbums = this.albums;
       this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n=> n[0]))].sort();
-     });
+      });
 
 
 
