@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Cancion } from '../cancion';
 import { ToastrService } from 'ngx-toastr';
 import { CancionService } from '../cancion.service';
+import { CancionFavorita } from '../cancionFavorita';
 
 @Component({
   selector: 'app-cancion-detail',
@@ -12,6 +13,7 @@ import { CancionService } from '../cancion.service';
 export class CancionDetailComponent implements OnInit {
 
   @Input() cancion: Cancion;
+  @Input() cancionFavorita: CancionFavorita;
   @Output() deleteCancion = new EventEmitter();
   @Output() selectFavorita = new EventEmitter();
   @Output() unSelectFavorita = new EventEmitter();
@@ -19,6 +21,7 @@ export class CancionDetailComponent implements OnInit {
   userId: number;
   token: string;
   cancionId: number;
+  newCancionFavorita: CancionFavorita;
 
   constructor(
     private router: ActivatedRoute,
@@ -43,14 +46,40 @@ export class CancionDetailComponent implements OnInit {
       this.cancion.favorita =0
     }
 
-    else if(this.cancion.favorita ==0) {
+    else if(this.cancion.favorita !==1) {
       this.cancion.favorita =1
+
     }
 
     this.cancionService.seleccionarFavorita(this.cancion, this.cancion.id)
     .subscribe(cancion => {
       this.showSuccess(cancion)
       this.routerPath.navigate([`/canciones/${this.userId}/${this.token}`])
+    },
+
+
+    error=> {
+      if(error.statusText === "UNAUTHORIZED"){
+        this.showWarning("Su sesión ha caducado, por favor vuelva a iniciar sesión.")
+      }
+      else if(error.statusText === "UNPROCESSABLE ENTITY"){
+        this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
+      }
+      else{
+        this.showError("Ha ocurrido un error. " + error.message)
+      }
+    })
+
+  }
+
+  createCancionFavorita(){
+    this.newCancionFavorita.id_cancion = this.cancion.id
+    this.newCancionFavorita.id_usuario = this.userId
+    this.cancionService.crearCancionFavorita(this.newCancionFavorita)
+    .subscribe(cancionFavorita => {
+      this.showSuccessFavorita(cancionFavorita)
+
+      this.routerPath.navigate([`/cancionesFavoritas/${this.userId}/${this.token}`])
     },
     error=> {
       if(error.statusText === "UNAUTHORIZED"){
@@ -64,6 +93,8 @@ export class CancionDetailComponent implements OnInit {
       }
     })
   }
+
+
 
   showError(error: string){
     this.toastr.error(error, "Error")
@@ -80,6 +111,18 @@ export class CancionDetailComponent implements OnInit {
 
     else {
       this.toastr.success(`La canción ${cancion.titulo} ya no es favorita`, "Selección Exitosa")
+    }
+
+  }
+
+
+  showSuccessFavorita(cancionFavorita: CancionFavorita) {
+    if(this.cancion.favorita ==1 ){
+      this.toastr.success(`La canción ${cancionFavorita.id} fue creada`, "Selección Exitosa")
+    }
+
+    else {
+      this.toastr.success(`La canción ${cancionFavorita.id} fue retirada`, "Selección Exitosa")
     }
 
   }

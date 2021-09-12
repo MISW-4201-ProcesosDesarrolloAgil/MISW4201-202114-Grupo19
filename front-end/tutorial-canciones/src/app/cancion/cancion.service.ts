@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cancion } from './cancion';
 import { Album } from '../album/album';
+import { CancionFavorita } from './cancionFavorita';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,12 @@ export class CancionService {
   crearCancion(cancion: Cancion):Observable<Cancion>{
     return this.http.post<Cancion>(`${this.backUrl}/canciones`, cancion)
   }
+
+  crearCancionFavorita(cancionFavorita: CancionFavorita):Observable<CancionFavorita>{
+    return this.http.post<CancionFavorita>(`${this.backUrl}/cancionesFavoritas`, cancionFavorita)
+  }
+
+
 
   getCancion(cancionId: number): Observable<Cancion>{
     return this.http.get<Cancion>(`${this.backUrl}/cancion/${cancionId}`)

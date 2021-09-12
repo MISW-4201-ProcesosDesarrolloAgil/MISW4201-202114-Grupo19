@@ -19,6 +19,11 @@ class Cancion(db.Model):
     favorita = db.Column(db.Integer)
     albumes = db.relationship('Album', secondary = 'album_cancion', back_populates="canciones")
 
+class CancionFavorita(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    id_cancion = db.Column(db.Integer)
+    id_usuario = db.Column(db.Integer)
+
 class Medio(enum.Enum):
    DISCO = 1
    CASETE = 2

@@ -1,5 +1,6 @@
+from flaskr.modelos.modelos import CancionFavorita
 from flask import request
-from ..modelos import db, Cancion, CancionSchema, Usuario, UsuarioSchema, Album, AlbumSchema, CancionFavoritaSchema
+from ..modelos import db, Cancion, CancionSchema, Usuario, UsuarioSchema, Album, AlbumSchema, CancionFavoritaSchema, CancionFavorita
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
@@ -15,13 +16,25 @@ class VistaCanciones(Resource):
 
     def post(self):
         nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], 
-        interprete=request.json["interprete"], favorita=request.json["favorita"])
+        interprete=request.json["interprete"])
         db.session.add(nueva_cancion)
         db.session.commit()
         return cancion_schema.dump(nueva_cancion)
 
     def get(self):
         return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+
+
+class VistaCancionesFavoritas(Resource):
+
+    def post(self):
+        nueva_cancion_favorita = CancionFavorita(id_cancion=request.json["id_cancion"], id_usuario=request.json["id_usuario"])
+        db.session.add(nueva_cancion_favorita)
+        db.session.commit()
+        return cancion_schema.dump(nueva_cancion_favorita)
+
+    def get(self):
+        return [cancionFavorita_schema.dump(ca) for ca in CancionFavorita.query.all()]
 
 class VistaCancion(Resource):
 

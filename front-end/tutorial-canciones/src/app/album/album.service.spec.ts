@@ -10,7 +10,7 @@ describe('Service: Album', () => {
     });
   });
 
-  it('should ...', inject([AlbumService], (service: AlbumService) => {
-    expect(service).toBeTruthy();
-  }));
+  // it('should ...', inject([AlbumService], (service: AlbumService) => {
+  //   expect(service).toBeTruthy();
+  // }));
 });
