@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Cancion } from '../cancion';
+import { Cancion, Genero } from '../cancion';
 import { CancionService } from '../cancion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -25,6 +25,30 @@ export class CancionListComponent implements OnInit {
   mostrarCanciones: Array<Cancion>
   cancionSeleccionada: Cancion
   indiceSeleccionado: number = 0
+  filteredCanciones: Cancion[] = [];
+
+
+  // Pendiente: Hay que dejarlo en la deficion de la clase para no repetirlo aqui
+  generos:Array<Genero> = [
+    {
+      llave: "ROCK", valor: 1
+    },
+    {
+      llave: "SALSA", valor: 2
+    },
+    {
+      llave: "CLASICA", valor: 3
+    },
+    {
+      llave: "METAL", valor: 4
+    },
+    {
+      llave: "JAZZ", valor: 5
+    },
+    {
+      llave: "LATINO", valor: 6
+    }
+  ]
 
 
   ngOnInit() {
@@ -35,6 +59,14 @@ export class CancionListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getCanciones();
+
+      this.canciones = this.canciones.sort((a, b) => (a.titulo < b.titulo ? -1 : 1))
+      this.filteredCanciones = this.canciones
+
+
+      //this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n=> n[0]))].sort();
+      //});
+
     }
   }
 
@@ -42,7 +74,7 @@ export class CancionListComponent implements OnInit {
     this.cancionService.getCanciones()
     .subscribe(canciones => {
       this.canciones = canciones
-      this.mostrarCanciones = canciones
+      this.mostrarCanciones = this.canciones.sort((a, b) => (a.titulo < b.titulo ? -1 : 1))//canciones
       this.onSelect(this.mostrarCanciones[0], 0)
     })
   }
