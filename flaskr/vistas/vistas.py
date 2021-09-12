@@ -1,5 +1,6 @@
+from flaskr.modelos.modelos import CancionFavorita
 from flask import request
-from ..modelos import db, Cancion, CancionSchema, Usuario, UsuarioSchema, Album, AlbumSchema
+from ..modelos import db, Cancion, CancionSchema, Usuario, UsuarioSchema, Album, AlbumSchema, CancionFavoritaSchema, CancionFavorita
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
@@ -7,18 +8,33 @@ from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identi
 cancion_schema = CancionSchema()
 usuario_schema = UsuarioSchema()
 album_schema = AlbumSchema()
+cancionFavorita_schema = CancionFavoritaSchema()
+
 
 
 class VistaCanciones(Resource):
 
     def post(self):
-        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
+        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], 
+        interprete=request.json["interprete"])
         db.session.add(nueva_cancion)
         db.session.commit()
         return cancion_schema.dump(nueva_cancion)
 
     def get(self):
         return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+
+
+class VistaCancionesFavoritas(Resource):
+
+    def post(self):
+        nueva_cancion_favorita = CancionFavorita(id_cancion=request.json["id_cancion"], id_usuario=request.json["id_usuario"])
+        db.session.add(nueva_cancion_favorita)
+        db.session.commit()
+        return cancion_schema.dump(nueva_cancion_favorita)
+
+    def get(self):
+        return [cancionFavorita_schema.dump(ca) for ca in CancionFavorita.query.all()]
 
 class VistaCancion(Resource):
 
@@ -31,6 +47,7 @@ class VistaCancion(Resource):
         cancion.minutos = request.json.get("minutos",cancion.minutos)
         cancion.segundos = request.json.get("segundos",cancion.segundos)
         cancion.interprete = request.json.get("interprete",cancion.interprete)
+        cancion.favorita = request.json.get("favorita",cancion.favorita)
         db.session.commit()
         return cancion_schema.dump(cancion)
 
@@ -113,7 +130,7 @@ class VistaCancionesAlbum(Resource):
             else:
                 return 'Canción errónea',404
         else: 
-            nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
+            nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"], favorita= request.json["favorita"])
             album.canciones.append(nueva_cancion)
         db.session.commit()
         return cancion_schema.dump(nueva_cancion)
@@ -141,4 +158,3 @@ class VistaAlbum(Resource):
         db.session.delete(album)
         db.session.commit()
         return '',204
-
