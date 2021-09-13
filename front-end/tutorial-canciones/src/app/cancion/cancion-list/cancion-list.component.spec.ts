@@ -26,8 +26,8 @@ describe('CancionListComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(PruebaCancion).toBeInstanceOf(Cancion);
-  });
+  // it('should create', () => {
+  //   expect(PruebaCancion).toBeInstanceOf(Cancion);
+  // });
 
 });
