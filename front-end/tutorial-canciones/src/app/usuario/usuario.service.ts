@@ -11,11 +11,11 @@ export class UsuarioService {
 
     constructor(private http: HttpClient) { }
 
-    // userLogIn(nombre: string, contrasena: string):Observable<any>{
-    //     return this.http.post<any>(`${this.backUrl}/logIn`, {"nombre": nombre, "contrasena": contrasena });
-    // }
+    userLogIn(nombre: string, contrasena: string):Observable<any>{
+        return this.http.post<any>(`${this.backUrl}/logIn`, {"nombre": nombre, "contrasena": contrasena });
+    }
 
-    // userSignUp(nombre: string, contrasena: string): Observable<any>{
-    //     return this.http.post<any>(`${this.backUrl}/signin`, {"nombre": nombre, "contrasena": contrasena})
-    // }
+    userSignUp(nombre: string, contrasena: string): Observable<any>{
+        return this.http.post<any>(`${this.backUrl}/signin`, {"nombre": nombre, "contrasena": contrasena})
+    }
 }
