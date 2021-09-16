@@ -4,6 +4,7 @@ import { CancionService } from '../cancion.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ThrowStmt } from '@angular/compiler';
+import { GENEROS_CANCION } from '../cancion.constants';
 
 @Component({
   selector: 'app-cancion-list',
@@ -21,34 +22,46 @@ export class CancionListComponent implements OnInit {
 
   userId: number
   token: string
-  canciones: Array<Cancion>
+  canciones: Array<Cancion> = []
   mostrarCanciones: Array<Cancion>
   cancionSeleccionada: Cancion
   indiceSeleccionado: number = 0
   filteredCanciones: Cancion[] = [];
+  busqueda: string = '';
 
 
   // Pendiente: Hay que dejarlo en la deficion de la clase para no repetirlo aqui
   generos:Array<Genero> = [
     {
-      llave: "ROCK", valor: 1
+      llave: "TODAS", valor: 0
     },
-    {
-      llave: "SALSA", valor: 2
-    },
-    {
-      llave: "CLASICA", valor: 3
-    },
-    {
-      llave: "METAL", valor: 4
-    },
-    {
-      llave: "JAZZ", valor: 5
-    },
-    {
-      llave: "LATINO", valor: 6
+    ...GENEROS_CANCION
+  ];
+
+  public filtro: any = '';
+
+
+
+  get cancionesFiltered(): Cancion[] {
+    let _canciones;
+
+    // Filtro por genero
+    if (this.filtro === '' || this.filtro === 'TODAS') {
+      _canciones = this.canciones;
+    } else {
+      _canciones = this.canciones.filter(cancion => cancion.genero === this.filtro);
     }
-  ]
+
+    // Filtro por busqueda
+    return _canciones.filter(cancion => {
+      if(this.busqueda !== '') {
+        return cancion.titulo.toLocaleLowerCase().includes(this.busqueda.toLocaleLowerCase()) || cancion.interprete.toLocaleLowerCase().includes(this.busqueda.toLocaleLowerCase());
+      } else {
+        return cancion
+      }
+    })
+  }
+
 
 
   ngOnInit() {
@@ -59,14 +72,6 @@ export class CancionListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getCanciones();
-
-      this.canciones = this.canciones.sort((a, b) => (a.titulo < b.titulo ? -1 : 1))
-      this.filteredCanciones = this.canciones
-
-
-      //this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n=> n[0]))].sort();
-      //});
-
     }
   }
 
@@ -74,8 +79,7 @@ export class CancionListComponent implements OnInit {
     this.cancionService.getCanciones()
     .subscribe(canciones => {
       this.canciones = canciones
-      this.mostrarCanciones = this.canciones.sort((a, b) => (a.titulo < b.titulo ? -1 : 1))//canciones
-      this.onSelect(this.mostrarCanciones[0], 0)
+      this.canciones = this.canciones.sort((a, b) => (a.titulo < b.titulo ? -1 : 1))//canciones
     })
   }
 
@@ -92,14 +96,8 @@ export class CancionListComponent implements OnInit {
 
   }
 
-  buscarCancion(busqueda: string){
-    let cancionesBusqueda: Array<Cancion> = []
-    this.canciones.map( cancion => {
-      if(cancion.titulo.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())){
-        cancionesBusqueda.push(cancion)
-      }
-    })
-    this.mostrarCanciones = cancionesBusqueda
+  buscarCancion(busqueda: string) {
+    this.busqueda = busqueda.trim();
   }
 
   eliminarCancion(){
