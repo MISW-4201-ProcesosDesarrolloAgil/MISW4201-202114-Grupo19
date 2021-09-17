@@ -114,8 +114,10 @@ export class CancionListComponent implements OnInit {
       if(cancion.titulo.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())){
         cancionesBusqueda.push(cancion)
       }
+      if ( busqueda === "")
+      this.ngOnInit();
     })
-    this.mostrarCanciones = cancionesBusqueda
+    this.filteredSongs = cancionesBusqueda
   }
 
   eliminarCancion(){

@@ -103,6 +103,7 @@ export class AlbumListComponent implements OnInit {
       this.albums = albums.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
       this.filteredAlbums = this.albums;
       this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n=> n[0]))].sort();
+
       });
 
 
@@ -162,14 +163,17 @@ export class AlbumListComponent implements OnInit {
   buscarAlbum(busqueda: string){
     let albumesBusqueda: Array<Album> = []
 
-    this.albumes.map( albu => {
+    this.filteredAlbums.map( albu => {
       if( albu.titulo.toLocaleLowerCase().includes(busqueda.toLowerCase())){
         albumesBusqueda.push(albu)
       }
+      if ( busqueda === "")
+      this.ngOnInit();
+
     })
 
 
-    this.mostrarAlbumes = albumesBusqueda
+    this.filteredAlbums = albumesBusqueda
   }
 
   irCrearAlbum(){
