@@ -12,7 +12,7 @@ album_schema = AlbumSchema()
 class VistaGeneros(Resource):
 
     def get(self):
-        generos = Cancion.query(Cancion.genero).distinct()
+        generos = Cancion.query.distinct(Cancion.genero)
         return [cancion_schema.dump(ge) for ge in generos]
 
 class VistaCanciones(Resource):
