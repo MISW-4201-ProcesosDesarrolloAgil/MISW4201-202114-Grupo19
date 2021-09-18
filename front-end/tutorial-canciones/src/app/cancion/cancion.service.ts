@@ -25,6 +25,9 @@ export class CancionService {
     return this.http.get<Cancion[]>(`${this.backUrl}/canciones`)
   }
 
+ getGeneros(): Observable<any>{
+  return this.http.get<any>(`${this.backUrl}/generos`)
+}
 
   getAlbumesCancion(cancionId: number): Observable<Album[]>{
     return this.http.get<Album[]>(`${this.backUrl}/cancion/${cancionId}/albumes`)
