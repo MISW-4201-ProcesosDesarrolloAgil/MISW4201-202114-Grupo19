@@ -23,6 +23,7 @@ export class CancionListComponent implements OnInit {
   token: string
   canciones: Array<Cancion>
   mostrarCanciones: Array<Cancion>
+  mostrarInterprete: Array<Cancion>
   cancionSeleccionada: Cancion
   indiceSeleccionado: number = 0
 
@@ -40,15 +41,33 @@ export class CancionListComponent implements OnInit {
   };
   openForm: boolean = false;
 
+
+
+  private _labelFilterInterprete: string;
+  get labelFilterInterprete(): string {
+    return this._labelFilterInterprete;
+  }
+  set labelFilterInterprete(value: string) {
+    this._labelFilterInterprete = value;
+    this.filterValues.artist = value
+    this.filteredSongs = this.performFiltersInterprete();
+    this.onSelect(this.filteredSongs[0], 0)
+  }
+
+
   private _labelFilter: string;
   get labelFilter(): string {
     return this._labelFilter;
   }
+
   set labelFilter(value: string) {
     this._labelFilter = value;
     this.filterValues.label = value
     this.filteredSongs = this.performFilters();
+    this.mostrarInterprete = this.filteredSongs;
+    this.onSelect(this.filteredSongs[0], 0)
   }
+
 
   performFilters(): Cancion[] {
     let canciones: Cancion[] = []
@@ -64,11 +83,28 @@ export class CancionListComponent implements OnInit {
     return [...new Set(canciones)].sort((a, b) => (a.titulo < b.titulo ? -1 : 1));
   }
 
+  performFiltersInterprete(): Cancion[] {
+    let canciones: Cancion[] = []
+
+    if (this.filterValues.artist === "") {
+      return canciones = this.canciones;
+    }
+
+    if (this.filterValues.artist !== "") {
+      this.performLabelFilterInterprete().forEach(x=> canciones.push(x));
+    }
+
+    return [...new Set(canciones)].sort((a, b) => (a.interprete < b.interprete ? -1 : 1));
+  }
+
   performLabelFilter(): Cancion[] {
     return this.canciones.filter((cancion: Cancion) =>
       cancion.titulo.includes(this.filterValues.label));
   }
-
+  performLabelFilterInterprete(): Cancion[] {
+    return this.canciones.filter((cancion: Cancion) =>
+      cancion.interprete.includes(this.filterValues.artist));
+  }
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
       this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
@@ -81,18 +117,28 @@ export class CancionListComponent implements OnInit {
       this.sub = this.cancionService.getCanciones().subscribe(canciones => {
       this.canciones = canciones.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
       this.filteredSongs = this.canciones;
-      this.artists = [...new Set(this.canciones.map(a => a.interprete).map(n=> n[0]))].sort();
+      this.getInterpretes();
       });
     }
+  }
+
+  getInterpretes():void{
+    this.cancionService.getCanciones()
+    .subscribe(canciones => {
+      this.mostrarInterprete = canciones.sort( (a, b) => (a.interprete < b.interprete ? -1 : 1));
+    })
   }
 
   getCanciones():void{
     this.cancionService.getCanciones()
     .subscribe(canciones => {
-      this.canciones = canciones
-      this.mostrarCanciones = canciones
+      this.mostrarCanciones = canciones.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
       this.onSelect(this.mostrarCanciones[0], 0)
     })
+  }
+
+  getListCanciones():Array<Cancion>{
+    return this.canciones;
   }
 
   onSelect(cancion: Cancion, indice: number){
