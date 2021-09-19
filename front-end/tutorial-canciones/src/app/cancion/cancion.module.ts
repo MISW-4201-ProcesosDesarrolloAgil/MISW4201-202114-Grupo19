@@ -7,7 +7,6 @@ import { CancionCreateComponent } from './cancion-create/cancion-create.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CancionEditComponent } from './cancion-edit/cancion-edit.component';
 
-
 @NgModule({
   declarations: [CancionListComponent, CancionDetailComponent, CancionCreateComponent, CancionEditComponent],
   imports: [
@@ -16,3 +15,6 @@ import { CancionEditComponent } from './cancion-edit/cancion-edit.component';
   exports:[CancionListComponent, CancionDetailComponent, CancionCreateComponent, CancionEditComponent]
 })
 export class CancionModule { }
+
+
+

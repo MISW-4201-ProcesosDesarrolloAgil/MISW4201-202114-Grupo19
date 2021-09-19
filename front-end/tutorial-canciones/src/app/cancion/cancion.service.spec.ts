@@ -2,6 +2,7 @@
 
 import { TestBed, async, inject } from '@angular/core/testing';
 import { CancionService } from './cancion.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 describe('Service: Cancion', () => {
   beforeEach(() => {

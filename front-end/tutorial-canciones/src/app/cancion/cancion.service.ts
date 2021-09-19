@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cancion } from './cancion';
 import { Album } from '../album/album';
+import { CancionFavorita } from './cancionFavorita';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class CancionService {
 
   getCancionesAlbum(idAlbum: number, token: string): Observable<Cancion[]>{
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`       
+      'Authorization': `Bearer ${token}`
     })
     return this.http.get<Cancion[]>(`${this.backUrl}/album/${idAlbum}/canciones`, {headers: headers})
   }
@@ -23,6 +24,7 @@ export class CancionService {
   getCanciones(): Observable<Cancion[]>{
     return this.http.get<Cancion[]>(`${this.backUrl}/canciones`)
   }
+
 
   getAlbumesCancion(cancionId: number): Observable<Album[]>{
     return this.http.get<Album[]>(`${this.backUrl}/cancion/${cancionId}/albumes`)
@@ -32,11 +34,21 @@ export class CancionService {
     return this.http.post<Cancion>(`${this.backUrl}/canciones`, cancion)
   }
 
+  crearCancionFavorita(cancionFavorita: CancionFavorita):Observable<CancionFavorita>{
+    return this.http.post<CancionFavorita>(`${this.backUrl}/cancionesFavoritas`, cancionFavorita)
+  }
+
+
+
   getCancion(cancionId: number): Observable<Cancion>{
     return this.http.get<Cancion>(`${this.backUrl}/cancion/${cancionId}`)
   }
 
   editarCancion(cancion: Cancion, cancionId: number):Observable<Cancion>{
+    return this.http.put<Cancion>(`${this.backUrl}/cancion/${cancionId}`, cancion)
+  }
+
+  seleccionarFavorita(cancion: Cancion, cancionId: number):Observable<Cancion>{
     return this.http.put<Cancion>(`${this.backUrl}/cancion/${cancionId}`, cancion)
   }
 
