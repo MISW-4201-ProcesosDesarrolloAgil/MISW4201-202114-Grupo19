@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from "ngx-toastr";
 import { Album, Cancion } from '../album';
 import { AlbumService } from '../album.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-album-list',
@@ -22,8 +23,72 @@ export class AlbumListComponent implements OnInit {
   token: string
   albumes: Array<Album>
   mostrarAlbumes: Array<Album>
+  albumFiltradoArtista: Array<Album>
+  albumFiltradoTitulo: Array<Album>
   albumSeleccionado: Album
   indiceSeleccionado: number
+
+  scroll: boolean;
+  fixedStyle: object = {"position": "fixed"};
+  display: object = {"display": "none"};
+  sub: Subscription;
+  albums: Album[];
+  artists: string[];
+  labels: string[];
+  genres: string[];
+  filteredAlbums: Album[] = [];
+  filterValues: { [filter: string]: string } = {
+    artist: "",
+    genre: "",
+    label: ""
+  };
+  openForm: boolean = false;
+
+  private _labelFilter: string;
+  get labelFilter(): string {
+    return this._labelFilter;
+  }
+  set labelFilter(value: string) {
+    this._labelFilter = value;
+    this.filterValues.label = value
+    this.filteredAlbums = this.performFilters();
+  }
+
+  performFilters(): Album[] {
+    let albums: Album[] = []
+
+    if (this.filterValues.label === "" || this.filterValues.genre ) {
+      return albums = this.albums;
+    }
+
+    if (this.filterValues.label !== "") {
+      this.performLabelFilter().forEach(x=> albums.push(x));
+    }
+    if (this.filterValues.genre !== "") {
+      this.performGenreFilter().forEach(x=> albums.push(x));
+    }
+
+    return [...new Set(albums)].sort((a, b) => (a.titulo < b.titulo ? -1 : 1));
+  }
+
+
+  performLabelFilter(): Album[] {
+    return this.albums.filter((album: Album) =>
+      album.titulo.includes(this.filterValues.label));
+  }
+
+  performGenreFilter(): Album[] {
+    return this.albums.filter((album: Album) =>
+      album.titulo.includes(this.filterValues.genre));
+  }
+
+  showForm() {
+    this.openForm = true;
+  }
+
+  hideForm() {
+    this.openForm = false;
+  }
 
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
@@ -33,6 +98,16 @@ export class AlbumListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getAlbumes();
+
+      this.sub = this.albumService.getAlbumes(this.userId, this.token).subscribe(albums => {
+      this.albums = albums.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
+      this.filteredAlbums = this.albums;
+      this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n=> n[0]))].sort();
+
+      });
+
+
+
     }
   }
 
@@ -60,6 +135,8 @@ export class AlbumListComponent implements OnInit {
 
   }
 
+
+
   onSelect(a: Album, index: number){
     this.indiceSeleccionado = index
     this.albumSeleccionado = a
@@ -85,12 +162,18 @@ export class AlbumListComponent implements OnInit {
 
   buscarAlbum(busqueda: string){
     let albumesBusqueda: Array<Album> = []
-    this.albumes.map( albu => {
+
+    this.filteredAlbums.map( albu => {
       if( albu.titulo.toLocaleLowerCase().includes(busqueda.toLowerCase())){
         albumesBusqueda.push(albu)
       }
+      if ( busqueda === "")
+      this.ngOnInit();
+
     })
-    this.mostrarAlbumes = albumesBusqueda
+
+
+    this.filteredAlbums = albumesBusqueda
   }
 
   irCrearAlbum(){
