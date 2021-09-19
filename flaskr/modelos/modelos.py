@@ -3,7 +3,6 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
 import enum
 
-
 db = SQLAlchemy()
 
 albumes_canciones = db.Table('album_cancion',

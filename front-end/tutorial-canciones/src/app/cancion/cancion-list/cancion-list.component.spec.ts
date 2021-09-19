@@ -27,7 +27,6 @@ describe('CancionListComponent', () => {
   });
 
   // it('should create', () => {
-  //   expect(PruebaCancion).toBeInstanceOf(Cancion);
+  //   expect(component).toBeTruthy();
   // });
-
 });

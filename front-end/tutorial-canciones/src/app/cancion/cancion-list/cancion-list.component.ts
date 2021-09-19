@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Cancion } from '../cancion';
 import { CancionService } from '../cancion.service';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -25,6 +26,49 @@ export class CancionListComponent implements OnInit {
   cancionSeleccionada: Cancion
   indiceSeleccionado: number = 0
 
+  scroll: boolean;
+  fixedStyle: object = {"position": "fixed"};
+  display: object = {"display": "none"};
+  sub: Subscription;
+  artists: string[];
+  labels: string[];
+  filteredSongs: Cancion[] = [];
+  filterValues: { [filter: string]: string } = {
+    artist: "",
+    genre: "",
+    label: ""
+  };
+  openForm: boolean = false;
+
+  private _labelFilter: string;
+  get labelFilter(): string {
+    return this._labelFilter;
+  }
+  set labelFilter(value: string) {
+    this._labelFilter = value;
+    this.filterValues.label = value
+    this.filteredSongs = this.performFilters();
+  }
+
+  performFilters(): Cancion[] {
+    let canciones: Cancion[] = []
+
+    if (this.filterValues.label === "") {
+      return canciones = this.canciones;
+    }
+
+    if (this.filterValues.label !== "") {
+      this.performLabelFilter().forEach(x=> canciones.push(x));
+    }
+
+    return [...new Set(canciones)].sort((a, b) => (a.titulo < b.titulo ? -1 : 1));
+  }
+
+  performLabelFilter(): Cancion[] {
+    return this.canciones.filter((cancion: Cancion) =>
+      cancion.titulo.includes(this.filterValues.label));
+  }
+
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
       this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
@@ -33,6 +77,12 @@ export class CancionListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getCanciones();
+
+      this.sub = this.cancionService.getCanciones().subscribe(canciones => {
+      this.canciones = canciones.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
+      this.filteredSongs = this.canciones;
+      this.artists = [...new Set(this.canciones.map(a => a.interprete).map(n=> n[0]))].sort();
+      });
     }
   }
 
@@ -64,8 +114,10 @@ export class CancionListComponent implements OnInit {
       if(cancion.titulo.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())){
         cancionesBusqueda.push(cancion)
       }
+      if ( busqueda === "")
+      this.ngOnInit();
     })
-    this.mostrarCanciones = cancionesBusqueda
+    this.filteredSongs = cancionesBusqueda
   }
 
   eliminarCancion(){
