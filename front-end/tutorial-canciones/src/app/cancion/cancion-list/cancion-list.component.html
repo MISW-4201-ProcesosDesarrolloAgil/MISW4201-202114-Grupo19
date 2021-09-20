@@ -20,8 +20,16 @@
                    <div>
                     <label for="label-filter" class="d-block mt-3 mb-1" >Titulo</label>
                     <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="labelFilter">
-                      <option selected></option>
+                      <option selected value="" disabled >Selecciona el nombre la canción</option>
+                      <option value="" >TODAS</option>
                       <option *ngFor="let l of filteredSongs" >{{l.titulo}}</option>
+                    </select>
+                  </div>
+                  <div class="col-10">
+                    <label for="label-filter" class="d-block mt-3 mb-1" >Género</label>
+                    <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="filtro">
+                      <option value="" disabled>Selecciona el género de tu busqueda</option>
+                      <option *ngFor="let genero of generos" value={{genero.llave}}>{{genero.llave}}</option>
                     </select>
                   </div>
                 </div>
@@ -48,23 +56,6 @@
             <div class="input-group my-2">
               <input #busqueda type="search" class="form-control" placeholder="Buscar canciones" aria-label="Search" (keyup)="buscarCancion(busqueda.value)">
             </div>
-
-            <div class="filters">
-              <h1 class="mb-4" ></h1>
-              <h5 >Filtrar por:</h5>
-            </div>
-
-              <div class=" row">
-                <div class="col-2 text-start">
-                  <label for="genero">Género</label>
-                </div>
-                <div class="col-10">
-                  <select class="form-select" [(ngModel)]="filtro">
-                    <option value="" disabled>Selecciona el género de tu busqueda</option>
-                    <option *ngFor="let genero of generos" value={{genero.llave}}>{{genero.llave}}</option>
-                  </select>
-                </div>
-              </div>
 
             <table class="table table-hover mb-0" aria-describedby="colecName">
               <tbody>
