@@ -120,7 +120,6 @@ export class CancionListComponent implements OnInit {
       this.sub = this.cancionService.getCanciones().subscribe(canciones => {
       this.canciones = canciones.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
       this.filteredSongs = this.canciones;
-      this.artists = [...new Set(this.canciones.map(a => a.interprete).map(n=> n[0]))].sort();
       });
     }
   }
