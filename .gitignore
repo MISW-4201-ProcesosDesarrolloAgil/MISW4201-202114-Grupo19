@@ -116,7 +116,8 @@ ENV/
 env.bak/
 venv.bak/
 */node_modules
-../venv
+/venv
+/node_modules
 
 # Spyder project settings
 .spyderproject
@@ -145,6 +146,7 @@ cython_debug/
 #VSC Settings
 */.vscode
 */.idea
+.idea
 
 #DataBase
 test.db

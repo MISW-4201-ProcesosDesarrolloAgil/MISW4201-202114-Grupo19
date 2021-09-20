@@ -20,15 +20,25 @@
                    <div>
                     <label for="label-filter" class="d-block mt-3 mb-1" >Titulo</label>
                     <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="labelFilter">
+                      <span Style="Display:none;">{{mostrarCanciones[0].titulo}}</span>
                       <option selected></option>
                       <option *ngFor="let l of mostrarCanciones" >{{l.titulo}}</option>
                     </select>
                   </div>
                   <div>
+                    <span Style="Display:none;">{{mostrarInterprete[0].interprete}}</span>
                     <label for="label-filter1" class="d-block mt-3 mb-1" >Interprete</label>
                     <select id="label-filter1" class="form-select form-select-sm bg-light" [(ngModel)]="labelFilterInterprete">
                       <option selected></option>
                       <option *ngFor="let i of mostrarInterprete" >{{i.interprete}}</option>
+
+                    </select>
+                  </div>
+                  <div class="col-10">
+                    <label for="label-filter" class="d-block mt-3 mb-1" >Género</label>
+                    <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="filtro">
+                      <option value="" disabled>Selecciona el género de tu busqueda</option>
+                      <option *ngFor="let genero of generos" value={{genero.llave}}>{{genero.llave}}</option>
                     </select>
                   </div>
                 </div>
@@ -57,10 +67,15 @@
 
             <table class="table table-hover mb-0" aria-describedby="colecName">
               <tbody>
-                  <tr *ngFor="let cancion of filteredSongs; index as i" (click)="onSelect(cancion, i)" [ngClass]="{'selected': i === indiceSeleccionado}">
-                    <td>{{cancion?.titulo}}</td>
-                    <td>{{cancion?.minutos}}:{{cancion?.segundos}}</td>
-                    <td><button *ngIf="cancion?.favorita==1" type="button" class="btn dark me-1"  title="Favorita"><i class="bi bi-star-fill"></i></button></td>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Duración</th>
+                    <th>Género</th>
+                  </tr>
+                  <tr *ngFor="let cancion of cancionesFiltered; index as i" (click)="onSelect(cancion, i)" [ngClass]="{'selected': i === indiceSeleccionado}">
+                    <td>{{cancion.titulo}}</td>
+                    <td>{{cancion.minutos}}:{{cancion.segundos}}</td>
+                    <td>{{cancion.genero}}</td>
                   </tr>
               </tbody>
             </table>
