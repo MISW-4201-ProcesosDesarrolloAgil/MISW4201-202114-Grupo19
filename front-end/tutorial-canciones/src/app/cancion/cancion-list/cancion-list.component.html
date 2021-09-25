@@ -1,49 +1,91 @@
 <app-header></app-header>
 <div class="container my-4">
-    <div class="row">
-      <div class="col-4">
-        <div class="card">
-          <div class="card-header">
-            <div class="row">
-              <div class="col-10 text-center">
-                <label class="fs-4">Canciones</label>
-              </div>
-              <div class="col-2 text-center">
-                <button type="button" class="my-1 btn btn-outline-primary btn-circle" (click)="irCrearCancion()"><i class="bi bi-plus-lg"></i></button>
-              </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-10 text-center">
+              <label class="fs-4">Canciones</label>
             </div>
-            <div class="card">
-              <div class="card-body">
-                <div class="filters ">
-                  <h1 class="mb-4" ></h1>
-                  <h2 >Filtrar por:</h2>
-                   <div>
-                    <label for="label-filter" class="d-block mt-3 mb-1" >Titulo</label>
-                    <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="labelFilter">
-                      <option selected value="" disabled >Selecciona el nombre la canción</option>
-                      <option value="" >TODAS</option>
-                      <option *ngFor="let l of filteredSongs" >{{l.titulo}}</option>
-                    </select>
-                  </div>
-                  <div class="col-10">
-                    <label for="label-filter" class="d-block mt-3 mb-1" >Género</label>
-                    <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="filtro">
-                      <option value="" disabled>Selecciona el género de tu busqueda</option>
-                      <option *ngFor="let genero of generos" value={{genero.llave}}>{{genero.llave}}</option>
-                    </select>
-                  </div>
+            <div class="col-2 text-center">
+              <button
+                type="button"
+                class="my-1 btn btn-outline-primary btn-circle"
+                (click)="irCrearCancion()"
+              >
+                <i class="bi bi-plus-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="filters">
+                <h1 class="mb-4"></h1>
+                <h2>Filtrar por:</h2>
+                <div>
+                  <label for="genre-filter" class="d-block mt-3 mb-1"
+                    >Género</label
+                  >
+                  <select
+                    id="genre-filter"
+                    class="form-select form-select-sm bg bg-light"
+                    (change)="onChangeGenre($event)"
+                  >
+                    <option value="" disabled>
+                      Selecciona el género de tu busqueda
+                    </option>
+                    <option
+                      *ngFor="let genero of generos"
+                      value="{{ genero.llave }}"
+                    >
+                      {{ genero.llave }}
+                    </option>
+                  </select>
                 </div>
-                <div class="albums-list col-md">
-
-                  <div class="row no-albums" *ngIf="!filteredSongs.length">
-                    <div class="col-10 mx-auto d-block mt-5">
-                      <div class="card text-center" style="height: 30rem;">
-                        <h5 class="card-header" >0 results</h5>
-                        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                          <h5 class="card-title" >No hay Canciones</h5>
-                          <p class="card-text" >Haga click en añadir canción para incluir uno nuevo</p>
-                          <button class="btn btn-standard btn-sm" type="button" (click)="irCrearCancion()" >+ Adicionar canción</button>
-                        </div>
+                <div>
+                  <label for="title-filter" class="d-block mt-3 mb-1"
+                    >Titulo</label
+                  >
+                  <select
+                    class="form-select"
+                    style="width: 100%; margin-bottom: 5px"
+                    (change)="onChangeSong($event)"
+                  >
+                    <option value="" disabled>
+                      Selecciona una cancion de la lista
+                    </option>
+                    <option *ngFor="let l of cancionesFiltered">
+                      {{ l.titulo }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="albums-list col-md">
+                <div class="row no-albums" *ngIf="!cancionesFiltered.length">
+                  <div class="col-10 mx-auto d-block mt-5">
+                    <div class="card text-center" style="height: 30rem">
+                      <h5 class="card-header">0 results</h5>
+                      <div
+                        class="
+                          card-body
+                          d-flex
+                          flex-column
+                          justify-content-center
+                          align-items-center
+                        "
+                      >
+                        <h5 class="card-title">No hay Canciones</h5>
+                        <p class="card-text">
+                          Haga click en añadir canción para incluir uno nuevo
+                        </p>
+                        <button
+                          class="btn btn-standard btn-sm"
+                          type="button"
+                          (click)="irCrearCancion()"
+                        >
+                          + Adicionar canción
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -51,32 +93,50 @@
               </div>
             </div>
           </div>
-          <div class="card-body">
-
-            <div class="input-group my-2">
-              <input #busqueda type="search" class="form-control" placeholder="Buscar canciones" aria-label="Search" (keyup)="buscarCancion(busqueda.value)">
-            </div>
-
-            <table class="table table-hover mb-0" aria-describedby="colecName">
-              <tbody>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Duración</th>
-                    <th>Género</th>
-                  </tr>
-                  <tr *ngFor="let cancion of cancionesFiltered; index as i" (click)="onSelect(cancion, i)" [ngClass]="{'selected': i === indiceSeleccionado}">
-                    <td>{{cancion.titulo}}</td>
-                    <td>{{cancion.minutos}}:{{cancion.segundos}}</td>
-                    <td>{{cancion.genero}}</td>
-                  </tr>
-              </tbody>
-            </table>
-
+        </div>
+        <div class="card-body">
+          <div class="filters">
+            <h1 class="mb-4"></h1>
+            <h5>Listado de canciones:</h5>
           </div>
+
+          <div class="input-group my-2">
+            <input
+              #busqueda
+              type="search"
+              class="form-control"
+              placeholder="Buscar canciones"
+              aria-label="Search"
+              (keyup)="onKey($event)"
+            />
+          </div>
+
+          <table class="table table-hover mb-0" aria-describedby="colecName">
+            <tbody>
+              <tr>
+                <th>Nombre</th>
+                <th>Duración</th>
+                <th>Género</th>
+              </tr>
+              <tr
+                *ngFor="let cancion of cancionesFiltered; index as i"
+                (click)="onSelect(cancion, i)"
+                [ngClass]="{ selected: i === indiceSeleccionado }"
+              >
+                <td>{{ cancion.titulo }}</td>
+                <td>{{ cancion.minutos }}:{{ cancion.segundos }}</td>
+                <td>{{ cancion.genero }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="col-8">
-        <app-cancion-detail (deleteCancion)="eliminarCancion()" [cancion]="cancionSeleccionada"></app-cancion-detail>
-      </div>
+    </div>
+    <div class="col-8">
+      <app-cancion-detail
+        (deleteCancion)="eliminarCancion()"
+        [cancion]="cancionSeleccionada"
+      ></app-cancion-detail>
     </div>
   </div>
+</div>
