@@ -4,7 +4,7 @@ export class Cancion {
     minutos: number;
     segundos: number;
     interprete: string;
-    genero: Genero;
+    genero: string;
     albumes: Array<any>
 
     constructor(
@@ -13,7 +13,7 @@ export class Cancion {
         minutos: number,
         segundos: number,
         interprete: string,
-        genero: Genero,
+        genero: string,
         albumes: Array<any>
     ){
         this.id = id,
