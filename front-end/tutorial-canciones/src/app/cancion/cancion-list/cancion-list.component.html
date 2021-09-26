@@ -24,7 +24,7 @@
                 <h1 class="mb-4"></h1>
                 <h2>Filtrar por:</h2>
                 <div>
-                  <label for="genre-filter" class="d-block mt-3 mb-1"
+                  <label for="genre-filter" class="d-block mt-2 mb-1"
                     >Género</label
                   >
                   <select
@@ -43,20 +43,43 @@
                     </option>
                   </select>
                 </div>
+
                 <div>
-                  <label for="title-filter" class="d-block mt-3 mb-1"
+                  <label for="perform-filter" class="d-block mt-2 mb-1"
+                    >Interprete</label
+                  >
+                  <select
+                    id="perform-filter"
+                    class="form-select form-select-sm bg bg-light"
+                    [ngModel]="listaInterpretes"
+                    (change)="onChangePerform($event)"
+                  >
+                    <option value="" disabled>
+                      Selecciona el interprete para tu busqueda
+                    </option>
+                    <option
+                      *ngFor="let interprete of listaInterpretesFiltrado"
+                      value="{{ interprete }}"
+                    >
+                      {{ interprete }}
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="title-filter" class="d-block mt-2 mb-1 bg-light"
                     >Titulo</label
                   >
                   <select
-                    class="form-select"
+                    class="form-select form-select-sm bg bg-light"
                     style="width: 100%; margin-bottom: 5px"
                     (change)="onChangeSong($event)"
                   >
                     <option value="" disabled>
                       Selecciona una cancion de la lista
                     </option>
-                    <option *ngFor="let l of cancionesFiltered">
-                      {{ l.titulo }}
+                    <option *ngFor="let l of listaTitulosFiltrado">
+                      {{ l }}
                     </option>
                   </select>
                 </div>
@@ -111,12 +134,13 @@
             />
           </div>
 
-          <table class="table table-hover mb-0" aria-describedby="colecName">
+          <table class="table table-hover mb-5" aria-describedby="colecName">
             <tbody>
               <tr>
                 <th>Nombre</th>
                 <th>Duración</th>
                 <th>Género</th>
+                <th>Interprete</th>
               </tr>
               <tr
                 *ngFor="let cancion of cancionesFiltered; index as i"
@@ -126,6 +150,7 @@
                 <td>{{ cancion.titulo }}</td>
                 <td>{{ cancion.minutos }}:{{ cancion.segundos }}</td>
                 <td>{{ cancion.genero }}</td>
+                <td>{{ cancion.interprete }}</td>
               </tr>
             </tbody>
           </table>
