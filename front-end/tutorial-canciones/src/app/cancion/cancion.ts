@@ -4,6 +4,7 @@ export class Cancion {
     minutos: number;
     segundos: number;
     interprete: string;
+    favorita: number;
     genero: string;
     albumes: Array<any>
 
@@ -13,6 +14,7 @@ export class Cancion {
         minutos: number,
         segundos: number,
         interprete: string,
+        favorita: number,
         genero: string,
         albumes: Array<any>
     ){
@@ -21,6 +23,7 @@ export class Cancion {
         this.minutos = minutos,
         this.segundos = segundos,
         this.interprete = interprete,
+        this.favorita = favorita,
         this.genero = genero,
         this.albumes = albumes
     }
