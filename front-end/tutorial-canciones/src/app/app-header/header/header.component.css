@@ -1,0 +1,25 @@
+
+nav .navbar-nav .nav-link {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+nav .navbar-nav .nav-link.active,
+nav .navbar-nav .nav-link:hover {
+  color: #FF6156;
+  font-weight: bold;
+}
+
+nav {
+  background-color: #051537;
+  border-bottom: #777 solid 1px;
+
+}
+
+.navbar-brand {
+  color: rgb(197, 236, 22);
+  font-size: 1.25rem;
+  font-weight: bold;
+
+}
