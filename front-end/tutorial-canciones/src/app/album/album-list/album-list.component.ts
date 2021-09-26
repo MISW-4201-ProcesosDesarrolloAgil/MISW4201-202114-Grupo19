@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from "ngx-toastr";
 import { Album, Cancion } from '../album';
 import { AlbumService } from '../album.service';
 import { Subscription } from 'rxjs';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-album-list',
@@ -22,18 +23,24 @@ export class AlbumListComponent implements OnInit {
   userId: number
   token: string
   albumes: Array<Album>
+  cancionesAlbum: Array<Cancion>
   mostrarAlbumes: Array<Album>
+
   albumFiltradoArtista: Array<Album>
   albumFiltradoTitulo: Array<Album>
   albumSeleccionado: Album
   indiceSeleccionado: number
+  longitudInterpretes: number
 
   scroll: boolean;
   fixedStyle: object = {"position": "fixed"};
   display: object = {"display": "none"};
   sub: Subscription;
   albums: Album[];
-  artists: string[];
+  artists: string[] = [];
+  performers: string[]  = [];
+  finalArtista: Album[] = [];
+  performer: string;
   labels: string[];
   genres: string[];
   filteredAlbums: Album[] = [];
@@ -54,15 +61,29 @@ export class AlbumListComponent implements OnInit {
     this.filteredAlbums = this.performFilters();
   }
 
+  private _artistFilter: string;
+  get artistFilter(): string {
+    return this._artistFilter;
+  }
+  set artistFilter(value: string) {
+    this._artistFilter = value;
+    this.filterValues.artist = value
+    this.filteredAlbums = this.performFilters();
+  }
+
   performFilters(): Album[] {
     let albums: Album[] = []
 
-    if (this.filterValues.label === "" || this.filterValues.genre ) {
+    if (this.filterValues.artist === "" && this.filterValues.genre === "" && this.filterValues.label === "") {
       return albums = this.albums;
     }
 
     if (this.filterValues.label !== "") {
       this.performLabelFilter().forEach(x=> albums.push(x));
+    }
+
+    if (this.filterValues.artist !== "") {
+      this.performArtistFilter().forEach(x=> albums.push(x));
     }
     if (this.filterValues.genre !== "") {
       this.performGenreFilter().forEach(x=> albums.push(x));
@@ -75,6 +96,12 @@ export class AlbumListComponent implements OnInit {
   performLabelFilter(): Album[] {
     return this.albums.filter((album: Album) =>
       album.titulo.includes(this.filterValues.label));
+  }
+
+  performArtistFilter(): Album[] {
+    console.log(this.albums)
+    let cuentaAlbum = this.albums.filter((album: Album) => album.interpretes.includes(this.filterValues.artist));
+    return cuentaAlbum
   }
 
   performGenreFilter(): Album[] {
@@ -98,17 +125,29 @@ export class AlbumListComponent implements OnInit {
       this.userId = parseInt(this.router.snapshot.params.userId)
       this.token = this.router.snapshot.params.userToken
       this.getAlbumes();
-
       this.sub = this.albumService.getAlbumes(this.userId, this.token).subscribe(albums => {
       this.albums = albums.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
+      this.getInterpretes();
       this.filteredAlbums = this.albums;
-      this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n=> n[0]))].sort();
-
+      //this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n =>n[0]))].sort();
       });
-
-
-
     }
+  }
+
+  getInterpretes(): void{
+    for (let i of this.albums){
+      this.sub = this.albumService.getCancionesAlbum(i.id, this.token).subscribe(canciones => {
+        this.cancionesAlbum = canciones.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
+        let result = canciones.map(a => a.interprete)
+        this.performers = this.removeDuplicates(this.performers.concat(result))
+        i.interpretes = result
+        this.finalArtista.push(i)
+      });
+    }
+  }
+
+  removeDuplicates(data: string[]): string[]{
+    return data.filter((value, index) => data.indexOf(value) === index);
   }
 
   getAlbumes():void{
@@ -143,22 +182,12 @@ export class AlbumListComponent implements OnInit {
     this.albumService.getCancionesAlbum(a.id, this.token)
     .subscribe(canciones => {
       this.albumSeleccionado.canciones = canciones
-      this.albumSeleccionado.interpretes = this.getInterpretes(canciones)
     },
     error =>{
       this.showError("Ha ocurrido un error, " + error.message)
     })
   }
 
-  getInterpretes(canciones: Array<Cancion>): Array<string>{
-    var interpretes: Array<string> = []
-    canciones.map( c => {
-      if(!interpretes.includes(c.interprete)){
-        interpretes.push(c.interprete)
-      }
-    })
-    return interpretes
-  }
 
   buscarAlbum(busqueda: string){
     let albumesBusqueda: Array<Album> = []
