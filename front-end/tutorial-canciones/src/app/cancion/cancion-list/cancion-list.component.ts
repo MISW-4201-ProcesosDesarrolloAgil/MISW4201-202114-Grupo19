@@ -124,6 +124,7 @@ export class CancionListComponent implements OnInit {
     this.listaTitulos = [...new Set(this.listaTitulos)]
     this.listaTitulosFiltrado =  this.listaTitulos
     console.log(this.listaTitulosFiltrado)
+    this.onSelect(this.cancionesFiltered[0],0);
   }
 
   onSelect(cancion: Cancion, indice: number) {
