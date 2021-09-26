@@ -18,6 +18,28 @@
                 <div class="filters ">
                   <h1 class="mb-4" ></h1>
                   <h2 >Filtrar por:</h2>
+
+                  <div>
+                    <label for="genre-filter" class="d-block mt-2 mb-1"
+                      >Género</label
+                    >
+                    <select
+                      id="genre-filter"
+                      class="form-select form-select-sm bg bg-light"
+                      (change)="onChangeGenre($event)"
+                    >
+                      <option value="" disabled>
+                        Selecciona el género de tu busqueda
+                      </option>
+                      <option
+                        *ngFor="let genero of generosListaFiltrada"
+                        value="{{ genero }}"
+                      >
+                        {{ genero }}
+                      </option>
+                    </select>
+                  </div>
+
                    <div>
                     <label for="label-filter" class="d-block mt-3 mb-1" >Titulo </label>
                     <select id="label-filter" class="form-select form-select-sm bg-light" [(ngModel)]="labelFilter">

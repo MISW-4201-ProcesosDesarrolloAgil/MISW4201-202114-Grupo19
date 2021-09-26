@@ -39,6 +39,9 @@ export class AlbumListComponent implements OnInit {
   albums: Album[];
   artists: string[] = [];
   performers: string[]  = [];
+  generosLista:string[]=[];
+  generosListaFiltrada:string[]=[];
+
   finalArtista: Album[] = [];
   performer: string;
   labels: string[];
@@ -117,6 +120,13 @@ export class AlbumListComponent implements OnInit {
     this.openForm = false;
   }
 
+
+  //************** */
+  onChangeGenre(event : any){
+
+  }
+
+
   ngOnInit() {
     if(!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " "){
       this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
@@ -128,6 +138,7 @@ export class AlbumListComponent implements OnInit {
       this.sub = this.albumService.getAlbumes(this.userId, this.token).subscribe(albums => {
       this.albums = albums.sort( (a, b) => (a.titulo < b.titulo ? -1 : 1));
       this.getInterpretes();
+      this.getGeneros();
       this.filteredAlbums = this.albums;
       //this.artists = [...new Set(this.albums.map(a => a.interpretes).map(n =>n[0]))].sort();
       });
@@ -142,6 +153,19 @@ export class AlbumListComponent implements OnInit {
         this.performers = this.removeDuplicates(this.performers.concat(result))
         i.interpretes = result
         this.finalArtista.push(i)
+      });
+    }
+  }
+
+  getGeneros(): void{
+    for (let i of this.albums){
+      this.sub = this.albumService.getCancionesAlbum(i.id, this.token).subscribe(generosActuales => {
+        this.cancionesAlbum = generosActuales.sort( (a, b) => (a.genero < b.genero ? -1 : 1));
+        let resultGeneros = generosActuales.map(a => a.genero)
+        this.generosLista = this.removeDuplicates(this.generosLista.concat(resultGeneros))  //En generosLista[] queda almacenados los generos de los albumes actuales (de las canciones de estos)
+        this.generosListaFiltrada=this.generosLista
+        console.log(this.generosLista)
+        console.log(this.generosListaFiltrada)
       });
     }
   }
@@ -188,7 +212,6 @@ export class AlbumListComponent implements OnInit {
     })
   }
 
-
   buscarAlbum(busqueda: string){
     let albumesBusqueda: Array<Album> = []
 
@@ -200,8 +223,6 @@ export class AlbumListComponent implements OnInit {
       this.ngOnInit();
 
     })
-
-
     this.filteredAlbums = albumesBusqueda
   }
 
