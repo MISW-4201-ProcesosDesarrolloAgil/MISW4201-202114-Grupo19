@@ -29,10 +29,16 @@ export class CancionListComponent implements OnInit {
   indiceSeleccionado: number = 0
 
   cancionesFiltered: Array<Cancion>
+  listaInterpretesFiltrado:Array<string>
+  listaTitulosFiltrado:Array<string>
   generoSeleccionado: string = 'TODAS'
   cancionSeleccionda: string
+  interpreteSeleccionado: string
   tipoFiltroCancion: string
   textoIngresadoBuscador: string
+  listaTitulos:Array<string>
+  listaInterpretes: Array<string>
+
 
   filteredCanciones: Cancion[] = []
   busqueda: string = ''
@@ -57,6 +63,13 @@ export class CancionListComponent implements OnInit {
     this.buscarCancion(this.cancionSeleccionada)
   }
 
+  onChangePerform(event: any){
+    this.interpreteSeleccionado = event.target.value
+    this.tipoFiltroCancion = "xInterprete"
+    this.buscarCancion(this.interpreteSeleccionado ? this.interpreteSeleccionado : "TODOS")
+    console.log(this.interpreteSeleccionado)
+  }
+
   onKey(event: any) {
     this.textoIngresadoBuscador = event.target.value
     console.log("ingresando a filtro por texto")
@@ -76,6 +89,7 @@ export class CancionListComponent implements OnInit {
     }
   }
 
+
   ngOnInit() {
     if (!parseInt(this.router.snapshot.params.userId) || this.router.snapshot.params.userToken === " ") {
       this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
@@ -93,7 +107,23 @@ export class CancionListComponent implements OnInit {
         this.canciones = canciones
         this.canciones = this.canciones.sort((a, b) => (a.titulo < b.titulo ? -1 : 1))
         this.cancionesFiltered = canciones
+        this.listarInterpretes();
+        this.listarTitulos();
       })
+  }
+
+  listarInterpretes(): void {
+    this.listaInterpretes = this.cancionesFiltered.map(cancion => cancion.interprete.trim().toLocaleUpperCase())
+    this.listaInterpretes = [...new Set(this.listaInterpretes)]
+    this.listaInterpretesFiltrado =  this.listaInterpretes
+    console.log(this.listaInterpretesFiltrado)
+  }
+
+  listarTitulos(): void {
+    this.listaTitulos = this.cancionesFiltered.map(cancion => cancion.titulo.trim().toLocaleUpperCase())
+    this.listaTitulos = [...new Set(this.listaTitulos)]
+    this.listaTitulosFiltrado =  this.listaTitulos
+    console.log(this.listaTitulosFiltrado)
   }
 
   onSelect(cancion: Cancion, indice: number) {
@@ -117,18 +147,28 @@ export class CancionListComponent implements OnInit {
       this.canciones.map(cancion => {
         if (cancion.genero == this.generoSeleccionado) {
           cancionesBusqueda.push(cancion)
-        }
+          }
         else if (this.generoSeleccionado == 'TODAS') {
           cancionesBusqueda = this.canciones
         }
       })
       this.cancionesFiltered = cancionesBusqueda
+      this.listarInterpretes()
+      this.listarTitulos()
     }
     else if (this.cancionSeleccionada && this.tipoFiltroCancion === "xTitulo") {
       console.log("comenzando busqueda por cancion")
       let _cancionBuscada: any = this.cancionSeleccionada
-      cancionesBusqueda = this.canciones.filter(cancion => cancion.titulo === _cancionBuscada)
+      cancionesBusqueda = this.canciones.filter(cancion => cancion.titulo.toLocaleLowerCase() === _cancionBuscada.toLocaleLowerCase())
       this.cancionesFiltered = cancionesBusqueda
+    }
+    else if (this.tipoFiltroCancion === "xInterprete"){
+      console.log(this.canciones)
+      if (this.generoSeleccionado !== ""){
+        cancionesBusqueda = this.canciones.filter(cancion => cancion.interprete.toLocaleLowerCase() === this.interpreteSeleccionado.toLocaleLowerCase())
+        this.cancionesFiltered = cancionesBusqueda
+        this.listarTitulos()
+      }
     }
     console.log(this.cancionesFiltered)
   }
