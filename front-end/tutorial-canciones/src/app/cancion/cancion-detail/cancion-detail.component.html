@@ -5,6 +5,8 @@
       <label class="fs-4 fw-bold">Canción: {{cancion?.titulo}}</label>
       <button *ngIf="cancion" type="button" class="btn btn-outline-success ms-3 me-2" (click)="goToEdit()" title="Editar canción"><i class="bi bi-pencil-square"></i></button>
       <button *ngIf="cancion" type="button" class="btn btn-outline-danger me-1" (click)="eliminarCancion()" title="Eliminar canción"><i class="bi bi-trash-fill"></i></button>
+      <button *ngIf="cancion.favorita==1" type="button" class="btn btn-outline-dark me-1" (click)=" seleccionarFavorita()" title="Quitar de Favorita"><i class="bi bi-star-fill"></i></button>
+      <button *ngIf="cancion.favorita !==1" type="button" class="btn btn-outline-dark me-1" (click)=" seleccionarFavorita()" title="Añadir como Favorita"><i class="bi bi-star"></i></button>
     </div>
 
   <div class="row mt-2">
@@ -19,6 +21,7 @@
       <div class="card">
         <div class="card-body">
           <p class="my-0"><span class="fw-bold">Intérpretes: </span> <span class="text-capitalize">{{cancion?.interprete}}</span></p>
+          <p class="my-0"><span class="fw-bold">favoritas: </span> <span class="text-capitalize">{{cancion.id}}</span></p>
         </div>
       </div>
     </div>

@@ -151,6 +151,7 @@
                 <td>{{ cancion.minutos }}:{{ cancion.segundos }}</td>
                 <td>{{ cancion.genero }}</td>
                 <td>{{ cancion.interprete }}</td>
+                <td><button *ngIf="cancion.favorita==1" type="button" class="btn dark me-1"  title="Favorita"><i class="bi bi-star-fill"></i></button></td>
               </tr>
             </tbody>
           </table>
